@@ -25,7 +25,7 @@ func Init() (*sdktrace.TracerProvider, error) {
 
 	user := os.Getenv("GRAFANA_CLOUD_USER")
 	key := os.Getenv("GRAFANA_CLOUD_API_KEY")
-	endpoint := os.Getenv("GRAFANA_CLOUD_TEMPO_ENDPOINT") // e.g., tempo-prod-10-prod-eu-west-2.grafana.net:443
+	endpoint := os.Getenv("GRAFANA_CLOUD_TRACES_ENDPOINT") // e.g., tempo-prod-10-prod-eu-west-2.grafana.net:443
 
 	var tp *sdktrace.TracerProvider
 	var err error
