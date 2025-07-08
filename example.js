@@ -5,17 +5,10 @@ import { check, sleep } from 'k6';
 const client = new Client({
   propagator: 'w3c',
   sampling: 1.0,
+  logTraceID: true,
 });
-client.load(null, './example-service/api/hello-service.proto');
 
-export const options = {
-  vus: 10,
-  duration: '30s',
-  cloud: {
-    projectID: 3738565,
-    name: 'Testing gRPC instrumentation',
-  }
-};
+client.load(null, './example-service/api/hello-service.proto');
 
 export default () => {
   client.connect('127.0.0.1:7777', { plaintext: true });

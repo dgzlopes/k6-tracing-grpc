@@ -66,13 +66,16 @@ class Client {
   #sampler;
   #propagator;
   #client;
+  #logTraceID;
 
   constructor(opts) {
     this.#sampler = newProbalisticSampler(opts.sampling);
     this.#propagator = propagatorMap[opts.propagator];
+    this.#logTraceID = opts.logTraceID || false;
     if (!this.#propagator) throw new Error("Unknown propagator: " + opts.propagator);
     this.#client = new grpc.Client();
   }
+
 
   load(paths, root) {
     return this.#client.load(paths, root);
@@ -92,18 +95,22 @@ class Client {
     if (!params.metadata) params.metadata = {};
     Object.assign(params.metadata, headers);
 
+    if (this.#logTraceID) {
+      console.log(`[trace] ${method} trace_id=${traceID}`);
+    }
+
     if (!execution.vu.metrics.metadata) {
       execution.vu.metrics.metadata = {};
     }
 
     try {
       execution.vu.metrics.metadata["trace_id"] = traceID;
-      console.log(`Trace ID: ${traceID}`);
       return this.#client.invoke(method, request, params);
     } finally {
       delete execution.vu.metrics.metadata["trace_id"];
     }
   }
+
 
   get client() {
     return this.#client;
